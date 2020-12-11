@@ -4,13 +4,10 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
-import java.lang.StringBuilder
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -22,6 +19,7 @@ class MainActivity : AppCompatActivity() {
         btn_timer.setOnClickListener {
             setAlarm()
         }
+        timer_clock.setIs24HourView(true)
     }
 
     private fun setAlarm() {
@@ -41,12 +39,15 @@ class MainActivity : AppCompatActivity() {
         val techHour = hours - currentHour.toInt()
         val techMinutes = minutes - currentMinute.toInt()
         val techSeconds = seconds - currentSeconds.toInt()
-        val sec = ((techHour * 60) * 60) + (techMinutes * 60) + techSeconds
+        var sec = ((techHour * 60) * 60) + (techMinutes * 60) + techSeconds
 
         val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val i = Intent(applicationContext, MyAlarmReciver::class.java)
         var pi = PendingIntent.getBroadcast(applicationContext, 111, i, 0)
 
+        if(sec <= 0) {
+            sec = 86400 - Math.abs(sec)
+        }
         alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() +(sec * 1000), pi)
         Toast.makeText(this, "Будильник поставлен на $sec секунд", Toast.LENGTH_LONG).show()
     }
