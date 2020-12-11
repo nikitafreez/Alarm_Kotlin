@@ -6,20 +6,15 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <TextView
-        android:id="@+id/txt_timer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Время"
-        android:layout_above="@id/btn_timer"
-        android:layout_centerHorizontal="true"
-        android:textSize="30sp"/>
+    <TimePicker
+        android:id="@+id/timer_clock"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
     <Button
         android:id="@+id/btn_timer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
+        android:layout_marginTop="500dp"
         android:text="Включить будильник" />
-
 </RelativeLayout>

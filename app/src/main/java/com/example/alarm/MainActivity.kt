@@ -7,6 +7,7 @@ import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
 import java.lang.StringBuilder
@@ -19,39 +20,34 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         btn_timer.setOnClickListener {
-            setAlarm(5)
+            setAlarm()
         }
     }
 
-    private fun setAlarm(number: Int) {
-        //Задаём формат даты (ЧЧ:ММ:СС)
-        val date = SimpleDateFormat("HH:mm:ss")
-        val text_timer = StringBuilder()
+    private fun setAlarm() {
+        //Задаём текущую дату
+        val curHour = SimpleDateFormat("HH")
+        val curMinute = SimpleDateFormat("mm")
+        val curSecond = SimpleDateFormat("ss")
+
+        val currentHour = curHour.format(Date()).toString()
+        val currentMinute = curMinute.format(Date()).toString()
+        val currentSeconds = curSecond.format(Date()).toString()
+        // Время на таймере
+        val hours = timer_clock.hour
+        val minutes = timer_clock.minute
+        val seconds = 0;
+        //Получение разницы времени
+        val techHour = hours - currentHour.toInt()
+        val techMinutes = minutes - currentMinute.toInt()
+        val techSeconds = seconds - currentSeconds.toInt()
+        val sec = ((techHour * 60) * 60) + (techMinutes * 60) + techSeconds
+
         val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        //Получаем текущую дату
-        val now = Calendar.getInstance()
-        val calendarList = ArrayList<Calendar>()
-        //Создаём список будильников
-        for(i in 1..number) calendarList.add(now)
-        for(calendar in calendarList) {
-            //Ставим будильник на 10 секунд
-            calendar.add(Calendar.SECOND, 10)
-            val requestCode = Random().nextInt()
-            val intent = Intent(this, MyAlarmReciver::class.java)
-            intent.putExtra("REQUEST_CODE", requestCode)
-            intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
-            intent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND)
-            val pendingIntent = PendingIntent.getBroadcast(this, requestCode, intent, 0)
-            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-                alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, pendingIntent)
-            else
-                alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, pendingIntent)
+        val i = Intent(applicationContext, MyAlarmReciver::class.java)
+        var pi = PendingIntent.getBroadcast(applicationContext, 111, i, 0)
 
-            text_timer.append(date.format(calendar.timeInMillis)).append("\n")
-        }
-        txt_timer.text = text_timer
-        Toast.makeText(this, "Будильник включён", Toast.LENGTH_LONG).show()
+        alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() +(sec * 1000), pi)
+        Toast.makeText(this, "Будильник поставлен на $sec секунд", Toast.LENGTH_LONG).show()
     }
-
-
 }
