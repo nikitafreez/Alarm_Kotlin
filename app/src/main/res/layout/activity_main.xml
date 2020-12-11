@@ -4,17 +4,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    android:background="#FFF0A7">
 
     <TimePicker
         android:id="@+id/timer_clock"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:background="#CCFDFD"/>
     <Button
         android:id="@+id/btn_timer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="500dp"
-        android:text="Включить будильник" />
+        android:text="Включить будильник"
+        android:background="?android:attr/colorFocusedHighlight"/>
 </RelativeLayout>
